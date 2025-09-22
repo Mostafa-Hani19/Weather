@@ -3,7 +3,7 @@
 A stylish, responsive, and feature-rich weather forecast web app, built using only HTML, CSS, and JavaScript.
 
 <!-- Add a link to the live demo here if you have one -->
-<!-- **Live demo:** [your-app-url.com](https://your-app-url.com) -->
+**Live demo:** [https://mostafa-weather.netlify.app](https://mostafa-weather.netlify.app)
 
 
 

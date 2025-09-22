@@ -326,57 +326,33 @@ function showError(message) {
 }
 
 function switchTab(btn) {
+    // Deactivate all buttons and activate the clicked one
     tabButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const target = btn.getAttribute('data-target');
-    const sections = [
-        document.querySelector('[data-section="overview"]'),
-        document.querySelector('[data-section="hourly"]'),
-        document.querySelector('[data-section="daily"]'),
-        document.querySelector('[data-section="details"]'),
-        document.querySelector('[data-section="news"]'),
-    ].filter(Boolean);
-    sections.forEach(sec => {
-        const secName = sec.getAttribute('data-section');
-        // Only hide sections not selected; keep DOM intact
-        if (secName === target || (target === 'overview' && secName === 'overview')) {
-            sec.classList.remove('hidden');
-        } else {
-            sec.classList.add('hidden');
-        }
+
+    const target = btn.dataset.target;
+
+    // Map data-target values to their corresponding section elements
+    const sections = {
+        overview: [weatherContent, dailyForecastContainer, hourlyForecastContainer, extraDetailsContainer, newsContainer],
+        hourly: [hourlyForecastContainer],
+        daily: [dailyForecastContainer],
+        details: [extraDetailsContainer],
+        news: [newsContainer]
+    };
+
+    // Get a unique list of all manageable sections
+    const allSections = [...new Set(Object.values(sections).flat())];
+
+    // Determine which sections to show for the active tab
+    const sectionsToShow = sections[target] || [];
+
+    // Toggle visibility for all sections
+    allSections.forEach(section => {
+        if (!section) return; // Skip if an element is not found
+        const shouldShow = sectionsToShow.includes(section);
+        section.classList.toggle('hidden', !shouldShow);
     });
-    // Map details -> extra details container
-    if (target === 'details') {
-        extraDetailsContainer.classList.remove('hidden');
-        weatherContent.classList.add('hidden');
-        dailyForecastContainer.classList.add('hidden');
-        hourlyForecastContainer.classList.add('hidden');
-        newsContainer.classList.add('hidden');
-    } else if (target === 'overview') {
-        weatherContent.classList.remove('hidden');
-        dailyForecastContainer.classList.remove('hidden');
-        hourlyForecastContainer.classList.remove('hidden');
-        extraDetailsContainer.classList.remove('hidden');
-        newsContainer.classList.remove('hidden');
-    } else if (target === 'hourly') {
-        weatherContent.classList.add('hidden');
-        hourlyForecastContainer.classList.remove('hidden');
-        dailyForecastContainer.classList.add('hidden');
-        extraDetailsContainer.classList.add('hidden');
-        newsContainer.classList.add('hidden');
-    } else if (target === 'daily') {
-        weatherContent.classList.add('hidden');
-        dailyForecastContainer.classList.remove('hidden');
-        hourlyForecastContainer.classList.add('hidden');
-        extraDetailsContainer.classList.add('hidden');
-        newsContainer.classList.add('hidden');
-    } else if (target === 'news') {
-        weatherContent.classList.add('hidden');
-        newsContainer.classList.remove('hidden');
-        dailyForecastContainer.classList.add('hidden');
-        hourlyForecastContainer.classList.add('hidden');
-        extraDetailsContainer.classList.add('hidden');
-    }
 }
 
 // --- Data and Formatting Helpers ---
