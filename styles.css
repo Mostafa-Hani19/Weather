@@ -429,6 +429,37 @@ header button:hover {
     .tab-btn.active { background: var(--accent-color); color: #fff; }
 }
 
+/* --- Fluid Typography & Flexible Sizing --- */
+/* Scales key text and icons smoothly across screen sizes */
+.city-info h2 { font-size: clamp(1.25rem, 1.1rem + 1.2vw, 2rem); }
+#temperature { font-size: clamp(2.75rem, 6vw, 4.75rem); }
+.unit-toggle { font-size: clamp(1rem, 0.8rem + 1vw, 1.5rem); }
+#weather-description { font-size: clamp(1rem, 0.9rem + 0.6vw, 1.2rem); }
+#weather-icon svg { width: clamp(56px, 12vw, 96px); height: clamp(56px, 12vw, 96px); }
+
+/* Make detail sections adapt better */
+.weather-details { flex-wrap: wrap; gap: 1rem; }
+.extra-details { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.daily-forecast { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+.hourly-forecast { grid-auto-columns: minmax(clamp(70px, 16vw, 120px), 1fr); }
+
+/* Slightly wider card on larger screens */
+@media (min-width: 600px) {
+    .weather-card { max-width: 680px; }
+}
+
+@media (min-width: 1024px) {
+    .weather-card { max-width: 820px; }
+}
+
+/* Improve very small devices usability */
+@media (max-width: 360px) {
+    header { flex-direction: column; }
+    #search-form { width: 100%; }
+    #city-input { border-radius: 10px; }
+    #search-form button { border-radius: 10px; margin-top: 0.4rem; }
+}
+
 /* --- Responsive Design --- */
 @media (max-width: 480px) {
     body {
