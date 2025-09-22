@@ -23,11 +23,13 @@ body {
                 linear-gradient(135deg, #e3f2fd 0%, #f5f7fa 50%, #e8f0fe 100%);
     color: var(--primary-text);
     display: grid;
-    place-items: center; /* A modern way to center content both horizontally and vertically */
+    place-items: center;
     min-height: 100vh;
     padding: 1rem;
     line-height: 1.4;
-    overflow-y: scroll; /* Reserve scrollbar to prevent content shift */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* --- Main Weather Card --- */
@@ -44,7 +46,8 @@ body {
     backdrop-filter: blur(14px) saturate(120%);
     -webkit-backdrop-filter: blur(14px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.5);
-    min-height: 540px; /* Reserve space to reduce jumps while content loads */
+    min-height: 540px;
+    box-sizing: border-box;
 }
 
 /* gradient border ring */
@@ -62,18 +65,26 @@ body {
     pointer-events: none;
 }
 
-.weather-card:hover { transform: translateY(-2px); transition: transform .18s ease; }
+.weather-card {
+    /* Add initial animation for the card itself */
+    animation: card-fade-in 0.6s ease-out;
+}
+.weather-card:hover { transform: translateY(-2px); transition: transform 0.18s ease; }
 
 /* --- Header: Search and Location --- */
 header {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #search-form {
     flex-grow: 1;
     display: flex;
+    min-width: 0; /* Allow shrinking */
 }
 
 #city-input {
@@ -85,7 +96,9 @@ header {
     outline: none;
     background: rgba(255, 255, 255, 0.8);
     transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
-    line-height: 1.2; /* stabilize height */
+    line-height: 1.2;
+    box-sizing: border-box;
+    min-width: 0; /* Allow shrinking */
 }
 
 #city-input:focus {
@@ -104,6 +117,8 @@ header button {
     justify-content: center;
     transition: background-color 0.25s, transform 0.2s, box-shadow 0.25s;
     box-shadow: 0 8px 18px rgba(52, 152, 219, 0.25);
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+    box-sizing: border-box;
 }
 
 header button:hover {
@@ -112,12 +127,28 @@ header button:hover {
     box-shadow: 0 10px 22px rgba(52, 152, 219, 0.35);
 }
 
+header button:active {
+    transform: scale(1); /* Slightly shrink on click for feedback */
+    box-shadow: 0 6px 14px rgba(52, 152, 219, 0.2);
+}
+
 #search-form button {
     border-radius: 0 10px 10px 0;
 }
 
 #location-btn {
     border-radius: 10px;
+}
+
+#theme-toggle-btn {
+    border-radius: 10px;
+}
+
+/* Reserve space for main content to prevent layout shift on load */
+#weather-content {
+    min-height: 290px;
+    /* Animate main content block on load */
+    animation: content-fade-in 0.7s ease-out 0.2s backwards;
 }
 
 /* --- Weather Content --- */
@@ -249,7 +280,15 @@ header button:hover {
     padding: 1rem;
     border-radius: 10px;
     margin-bottom: 1.5rem;
+    /* Position absolutely to prevent pushing content on show/hide */
+    position: absolute;
+    top: 6.5rem; /* Position below the header */
+    left: 1.5rem;
+    right: 1.5rem;
+    z-index: 5;
     box-shadow: 0 6px 14px rgba(231, 76, 60, 0.25);
+    /* Add animation for smooth appearance */
+    animation: error-slide-down 0.4s ease-out;
 }
 
 /* --- Extra Details --- */
@@ -274,6 +313,9 @@ header button:hover {
     background: rgba(0, 0, 0, 0.02);
     padding: 1rem;
     border-radius: 12px;
+    /* Add staggered animation */
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .extra-detail-item .label {
@@ -313,6 +355,10 @@ header button:hover {
     gap: 0.75rem;
     font-size: 0.9rem;
 }
+.news-item {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
 
 .news-item svg {
     width: 20px;
@@ -349,6 +395,9 @@ header button:hover {
     align-items: center;
     gap: 0.5rem;
     background: rgba(0, 0, 0, 0.03);
+    /* Add staggered animation */
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
     box-shadow: 0 8px 18px rgba(0,0,0,0.06);
 }
 
@@ -398,7 +447,11 @@ header button:hover {
     scroll-snap-type: x mandatory;
 }
 .hourly-forecast { min-height: 128px; }
-.hour { background: rgba(255, 255, 255, 0.65); border: 1px solid rgba(0,0,0,0.04); backdrop-filter: blur(6px); border-radius: 14px; padding: 12px 10px; text-align: center; display: grid; gap: 6px; justify-items: center; box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
+.hour { background: rgba(255, 255, 255, 0.65); border: 1px solid rgba(0,0,0,0.04); backdrop-filter: blur(6px); border-radius: 14px; padding: 12px 10px; text-align: center; display: grid; gap: 6px; justify-items: center; box-shadow: 0 6px 14px rgba(0,0,0,0.06); 
+    /* Add staggered animation */
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
 .hour .t { color: var(--secondary-text); font-size: 0.8rem; }
 .hour .i svg { width: 22px; height: 22px; color: var(--accent-color); }
 .hour .d { font-weight: bold; font-size: 0.95rem; }
@@ -408,6 +461,9 @@ header button:hover {
     display: flex;
     gap: 0.5rem;
     margin: 0.5rem 0 1rem 0;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
 }
 .tab-btn {
     padding: 0.5rem 0.9rem;
@@ -418,8 +474,15 @@ header button:hover {
     cursor: pointer;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s, color .2s;
     position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 .tab-btn:hover { transform: translateY(-1px); }
+.tab-btn:active {
+    transform: translateY(0);
+    transition-duration: 0.1s;
+}
 .tab-btn.active {
     background: var(--accent-color);
     color: #fff;
@@ -441,6 +504,41 @@ header button:hover {
     .tab-btn { background: rgba(255,255,255,0.06); border-color: var(--border-color); color: var(--primary-text); }
     .tab-btn.active { background: var(--accent-color); color: #fff; }
 }
+
+/* --- Animations --- */
+@keyframes card-fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes content-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes error-slide-down {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Staggered animation delays for list items */
+.hourly-forecast .hour:nth-child(1), .daily-forecast .forecast-item:nth-child(1), .extra-details .extra-detail-item:nth-child(1), .news-content .news-item:nth-child(1) { animation-delay: 0.1s; }
+.hourly-forecast .hour:nth-child(2), .daily-forecast .forecast-item:nth-child(2), .extra-details .extra-detail-item:nth-child(2), .news-content .news-item:nth-child(2) { animation-delay: 0.15s; }
+.hourly-forecast .hour:nth-child(3), .daily-forecast .forecast-item:nth-child(3), .extra-details .extra-detail-item:nth-child(3), .news-content .news-item:nth-child(3) { animation-delay: 0.2s; }
+.hourly-forecast .hour:nth-child(4), .daily-forecast .forecast-item:nth-child(4), .extra-details .extra-detail-item:nth-child(4), .news-content .news-item:nth-child(4) { animation-delay: 0.25s; }
+.hourly-forecast .hour:nth-child(5), .daily-forecast .forecast-item:nth-child(5), .extra-details .extra-detail-item:nth-child(5), .news-content .news-item:nth-child(5) { animation-delay: 0.3s; }
+.hourly-forecast .hour:nth-child(6), .daily-forecast .forecast-item:nth-child(6), .extra-details .extra-detail-item:nth-child(6) { animation-delay: 0.35s; }
+.hourly-forecast .hour:nth-child(7) { animation-delay: 0.4s; }
+.hourly-forecast .hour:nth-child(8) { animation-delay: 0.45s; }
+.hourly-forecast .hour:nth-child(9) { animation-delay: 0.5s; }
+.hourly-forecast .hour:nth-child(10) { animation-delay: 0.55s; }
+.hourly-forecast .hour:nth-child(11) { animation-delay: 0.6s; }
+.hourly-forecast .hour:nth-child(12) { animation-delay: 0.65s; }
 
 /* --- Fluid Typography & Flexible Sizing --- */
 /* Scales key text and icons smoothly across screen sizes */
@@ -467,10 +565,14 @@ header button:hover {
 
 /* Improve very small devices usability */
 @media (max-width: 360px) {
-    header { flex-direction: column; }
+    body { padding: 0.5rem; }
+    .weather-card { padding: 1rem; }
+    header { flex-direction: column; gap: 0.75rem; }
     #search-form { width: 100%; }
     #city-input { border-radius: 10px; }
-    #search-form button { border-radius: 10px; margin-top: 0.4rem; }
+    #search-form button { border-radius: 10px; margin-top: 0; }
+    .top-tabs { gap: 0.25rem; }
+    .tab-btn { padding: 0.4rem 0.7rem; font-size: 0.85rem; }
 }
 
 /* --- Responsive Design --- */
@@ -482,58 +584,69 @@ header button:hover {
         border-radius: 0;
         min-height: 100vh;
         padding: 1.25rem;
+        max-width: 100%;
     }
     .extra-details {
         grid-template-columns: 1fr;
     }
+    .daily-forecast { 
+        gap: 0.6rem; 
+        grid-template-columns: repeat(4, 1fr); 
+    }
+    .hourly-forecast {
+        grid-auto-columns: minmax(80px, 1fr);
+    }
 }
 
-/* --- Dark Mode (System Preference) --- */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary-bg: #0f141a;
-        --card-bg: #121821;
-        --primary-text: #e6edf3;
-        --secondary-text: #9fb0c0;
-        --accent-color: #5aa6ff;
-        --border-color: #213040;
-        --shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
-    }
+/* --- Dark Mode --- */
+body.dark-theme {
+    --primary-bg: #0f141a;
+    --card-bg: #121821;
+    --primary-text: #e6edf3;
+    --secondary-text: #9fb0c0;
+    --accent-color: #5aa6ff;
+    --border-color: #213040;
+    --shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
 
-    body {
-        background: radial-gradient(1200px 600px at 10% 10%, rgba(37, 99, 235, 0.18), transparent 40%),
-                    radial-gradient(1000px 500px at 90% 90%, rgba(16, 185, 129, 0.14), transparent 40%),
-                    #0b1117;
-    }
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(37, 99, 235, 0.18), transparent 40%),
+                radial-gradient(1000px 500px at 90% 90%, rgba(16, 185, 129, 0.14), transparent 40%),
+                #0b1117;
+}
 
-    .weather-card {
-        background: rgba(18, 24, 33, 0.55);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-    }
+body.dark-theme .weather-card {
+    background: rgba(18, 24, 33, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
 
-    #city-input {
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--primary-text);
-    }
+body.dark-theme #city-input {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--primary-text);
+}
 
-    .extra-detail-item {
-        background: rgba(255, 255, 255, 0.04);
-    }
-    
-    .news-item {
-        background: rgba(255, 193, 7, 0.1);
-        border-left-color: #ffc107;
-    }
-    .news-item svg {
-        color: #ffc107;
-    }
+body.dark-theme .extra-detail-item {
+    background: rgba(255, 255, 255, 0.04);
+}
 
-    .forecast-detail-item svg {
-        color: var(--secondary-text);
-    }
+body.dark-theme .news-item {
+    background: rgba(255, 193, 7, 0.1);
+    border-left-color: #ffc107;
+}
+body.dark-theme .news-item svg {
+    color: #ffc107;
+}
 
-    .loader-container { background: rgba(0, 0, 0, 0.35); }
-    .hour { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.06); }
+body.dark-theme .forecast-detail-item svg {
+    color: var(--secondary-text);
+}
+
+body.dark-theme .loader-container { background: rgba(0, 0, 0, 0.35); }
+body.dark-theme .hour { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.06); }
+
+body.dark-theme .tab-btn { background: rgba(255,255,255,0.06); border-color: var(--border-color); color: var(--primary-text); }
+body.dark-theme .tab-btn.active { background: var(--accent-color); color: #fff; }
+
+body.dark-theme .unit-toggle button.active {
+    color: var(--primary-text);
 }
 
 /* Motion respect */

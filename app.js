@@ -3,6 +3,7 @@ const searchForm = document.getElementById('search-form');
 const cityInput = document.getElementById('city-input');
 const locationBtn = document.getElementById('location-btn');
 const refreshBtn = document.getElementById('refresh-btn');
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
 const weatherContent = document.getElementById('weather-content');
 const loader = document.getElementById('loader');
 const errorMessage = document.getElementById('error-message');
@@ -106,6 +107,21 @@ const apiService = openMeteoService;
 
 // --- Event Listeners ---
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Theme Setup ---
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark-theme');
+        themeToggleBtn.querySelector('.theme-icon-sun').classList.remove('hidden');
+        themeToggleBtn.querySelector('.theme-icon-moon').classList.add('hidden');
+    } else {
+        document.body.classList.remove('dark-theme');
+        themeToggleBtn.querySelector('.theme-icon-sun').classList.add('hidden');
+        themeToggleBtn.querySelector('.theme-icon-moon').classList.remove('hidden');
+    }
+
+
     // Load last known city or a default on startup
     const lastCity = localStorage.getItem('lastCity');
     const savedUnit = localStorage.getItem('unit');
@@ -155,6 +171,19 @@ refreshBtn.addEventListener('click', () => {
 
 celsiusBtn.addEventListener('click', () => setUnit('celsius'));
 fahrenheitBtn.addEventListener('click', () => setUnit('fahrenheit'));
+
+themeToggleBtn.addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+    // Toggle icon visibility
+    const sunIcon = themeToggleBtn.querySelector('.theme-icon-sun');
+    const moonIcon = themeToggleBtn.querySelector('.theme-icon-moon');
+    sunIcon.classList.toggle('hidden', !isDark);
+    moonIcon.classList.toggle('hidden', isDark);
+});
+
+
 
 // --- Core Functions ---
 
