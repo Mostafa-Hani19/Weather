@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Weather</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☁️</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+    <main>
+        <div class="weather-card">
+            <!-- Search and Location Controls -->
+            <header>
+                <form id="search-form" role="search">
+                    <input type="text" id="city-input" placeholder="Enter city name..." aria-label="City Name">
+                    <button type="submit" aria-label="Search">
+                        <!-- Search Icon SVG -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                    </button>
+                </form>
+                <button id="location-btn" aria-label="Use my location">
+                    <!-- Location Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                </button>
+                <button id="refresh-btn" aria-label="Refresh now" title="Refresh">
+                    <!-- Refresh Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 3a5 5 0 1 1-4.546 2.916.5.5 0 0 1 .908-.418A4 4 0 1 0 8 4v1.5a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 7.5 2h3a.5.5 0 0 1 0 1H9a5 5 0 0 1-1 0z"/>
+                    </svg>
+                </button>
+                
+            </header>
+
+            <!-- Top Tabs Navigation -->
+            <nav class="top-tabs" aria-label="Weather sections">
+                <button class="tab-btn active" data-target="overview">Overview</button>
+                <button class="tab-btn" data-target="hourly">Hourly</button>
+                <button class="tab-btn" data-target="daily">Weekly</button>
+                <button class="tab-btn" data-target="details">Details</button>
+                <button class="tab-btn" data-target="news">News</button>
+            </nav>
+
+            <!-- Loading Spinner -->
+            <div id="loader" class="loader-container hidden">
+                <div class="loader"></div>
+            </div>
+
+            <!-- Error Message Display -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- Weather Information Display (Overview) -->
+            <div id="weather-content" data-section="overview">
+                <div class="city-info">
+                    <h2 id="city-name">--</h2>
+                    <p class="last-updated">Last updated: <span id="last-updated-time">N/A</span></p>
+                </div>
+
+                <div class="weather-main">
+                    <div id="weather-icon">
+                        <!-- Placeholder for weather icon SVG -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.728C1.67 13 0 11.328 0 9.25c0-1.762 1.224-3.223 2.882-3.695l.02-.011C3.226 4.29 3.754 3.6 4.406 3.342z"/>
+                        </svg>
+                    </div>
+                    <div class="temperature">
+                        <h1 id="temperature">--</h1>
+                        <div class="unit-toggle">
+                            <button id="celsius-btn" class="active" aria-pressed="true">°C</button>
+                            <span>|</span>
+                            <button id="fahrenheit-btn" aria-pressed="false">°F</button>
+                        </div>
+                    </div>
+                    <p id="weather-description">--</p>
+                </div>
+
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <p>Wind</p>
+                        <p id="wind-speed">--</p>
+                    </div>
+                    <div class="detail-item">
+                        <p>Humidity</p>
+                        <p id="humidity">--</p>
+                    </div>
+                </div>
+
+                <!-- Extra Weather Details -->
+                <div id="extra-details-container" class="hidden">
+                    <div class="extra-details-header">Today's Details</div>
+                    <div id="extra-details" class="extra-details">
+                        <!-- Items will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather News/Alerts -->
+            <div id="news-container" data-section="news" class="hidden">
+                <div class="news-header">Weather News</div>
+                <div id="news-content" class="news-content">
+                    <!-- News items will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Daily Forecast -->
+            <div id="daily-forecast-container" data-section="daily" class="hidden">
+                <div class="forecast-header">Daily Forecast</div>
+                <div id="daily-forecast" class="daily-forecast"></div>
+            </div>
+
+            <!-- Hourly Forecast -->
+            <div id="hourly-forecast-container" data-section="hourly" class="hidden">
+                <div class="forecast-header">Hourly Forecast</div>
+                <div id="hourly-forecast" class="hourly-forecast"></div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
