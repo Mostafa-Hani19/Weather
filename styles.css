@@ -27,6 +27,8 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 1rem;
+    line-height: 1.4;
+    overflow-y: scroll; /* Reserve scrollbar to prevent content shift */
 }
 
 /* --- Main Weather Card --- */
@@ -43,6 +45,7 @@ body {
     backdrop-filter: blur(14px) saturate(120%);
     -webkit-backdrop-filter: blur(14px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.5);
+    min-height: 540px; /* Reserve space to reduce jumps while content loads */
 }
 
 /* gradient border ring */
@@ -83,6 +86,7 @@ header {
     outline: none;
     background: rgba(255, 255, 255, 0.8);
     transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    line-height: 1.2; /* stabilize height */
 }
 
 #city-input:focus {
@@ -153,6 +157,7 @@ header button:hover {
     font-size: 4rem;
     font-weight: 300;
     letter-spacing: -1px;
+    line-height: 1; /* prevent vertical shift */
 }
 
 .unit-toggle {
@@ -171,6 +176,7 @@ header button:hover {
     color: var(--secondary-text);
     padding: 0.25rem;
     transition: color 0.25s, transform 0.2s;
+    line-height: 1; /* avoid inline height changes */
 }
 
 .unit-toggle button.active {
@@ -192,6 +198,7 @@ header button:hover {
     justify-content: space-around;
     border-top: 1px solid var(--border-color);
     padding-top: 1.5rem;
+    min-height: 72px; /* keep area stable when values update */
 }
 
 .detail-item p:first-child {
@@ -219,6 +226,7 @@ header button:hover {
     justify-content: center;
     align-items: center;
     z-index: 10;
+    pointer-events: none; /* don't cause reflow on show/hide */
 }
 
 .loader {
@@ -330,6 +338,7 @@ header button:hover {
     grid-template-columns: repeat(5, 1fr);
     gap: 0.75rem;
     overflow-x: auto;
+    min-height: 130px; /* reserve space to avoid shifting when items render */
 }
 
 .forecast-item {
@@ -385,6 +394,7 @@ header button:hover {
 
 /* Hourly Forecast */
 .hourly-forecast { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(90px, 1fr); gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-top: 0.5rem; }
+.hourly-forecast { min-height: 128px; }
 .hour { background: rgba(255, 255, 255, 0.65); border: 1px solid rgba(0,0,0,0.04); backdrop-filter: blur(6px); border-radius: 14px; padding: 12px 10px; text-align: center; display: grid; gap: 6px; justify-items: center; box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
 .hour .t { color: var(--secondary-text); font-size: 0.8rem; }
 .hour .i svg { width: 22px; height: 22px; color: var(--accent-color); }
